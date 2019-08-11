@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}班主任 - {{ tutor.name }}{% endblock %}
+
+{% block cur %}编辑班主任 - {{ tutor.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ tutor_user }} - {{ tutor.name }}</h1>
+{% if post and error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-danger" disabled="disabled">{{ reason }}</button>
+{% endif %}
+{% if post and not error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-success" disabled="disabled">操作成功</button>
+{% endif %}
+<hr>
+<h2>修改个人信息</h2>
+<form method="post" class="am-form">
+  {% csrf_token %}
+  <label for="name">姓名:</label>
+  <input type="text" name="name" id="name" value="{{ tutor.name }}">
+  <br>
+    <label for="phone">电话:</label>
+    <input type="text" name="phone" id="phone" value="{{ tutor.phone }}">
+  <br>
+  <br />
+  <div class="am-cf">
+    <input type="submit" name="" value="提 交" class="am-btn am-btn-primary am-btn-sm am-fl">
+  </div>
+</form>
+<hr>
+<h2>修改密码</h2>
+<form method="post" class="am-form">
+  {% csrf_token %}
+  <label for="new-password">新密码:</label>
+  <input type="password" name="newPassword" id="new-password" value="">
+  <br>
+    <label for="confirmation">确认新密码:</label>
+  <input type="password" name="confirmation" id="confirmation" value="">
+  <br>
+  <br />
+  <div class="am-cf">
+    <input type="submit" name="" value="提 交" class="am-btn am-btn-primary am-btn-sm am-fl">
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}学生 - {{ student.name }}{% endblock %}
+
+{% block cur %}编辑学生 - {{ student.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ student.id }} - {{ student.name }}</h1>
+{% if post and error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-danger" disabled="disabled">{{ reason }}</button>
+{% endif %}
+{% if post and not error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-success" disabled="disabled">操作成功</button>
+{% endif %}
+<hr>
+<h2>基本信息</h2>
+<form method="post" class="am-form">
+  {% csrf_token %}
+  <label for="name">姓名:</label>
+  <input type="text" name="name" id="name" value="{{ student.name }}" {% if not user.is_admin %}disabled="disabled"{% endif %}>
+  <br>
+  <label for="type">类型:</label>
+  <select class="am-form-field" name="type" id="type" {% if not user.is_admin %}disabled="disabled"{% endif %}>
+    {% for i in choices %}
+    <option value="{{ i.0 }}" {% if student.type == i.0 %}selected="selected"{% endif %}>{{ i.1 }}</option>
+    {% endfor %}
+  </select>
+  <br />
+  <label for="type">班主任:</label>
+  <select class="am-form-field" name="tutor" {% if not user.is_admin %}disabled="disabled"{% endif %}>
+    {% for i in tutors %}
+    <option value="{{ i.id }}" {% if student.tutor.id == i.id %}selected="selected"{% endif %}>{{ i.id }} - {{ i.name }}</option>
+    {% endfor %}
+  </select>
+  {% if user.is_admin %}
+  <br />
+  <div class="am-cf">
+    <input type="submit" name="" value="保 存" class="am-btn am-btn-primary am-btn-sm am-fl">
+  </div>
+  {% endif %}
+</form>
+<hr>
+<h2>所选科目</h2>
+
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              {% if user.is_admin %}
+              <button type="button" class="am-btn am-btn-default" data-am-modal="{target: '#new-course', closeViaDimmer: 0}"><span class="am-icon-plus"></span> 新增</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-6">
+          <!--<div class="am-input-group am-input-group-sm">-->
+            <!--<input type="text" class="am-form-field">-->
+            <!--<span class="am-input-group-btn">-->
+              <!--<button class="am-btn am-btn-default" type="button">搜索</button>-->
+            <!--</span>-->
+          <!--</div>-->
+        </div>
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+          <form class="am-form">
+            <table class="am-table am-table-striped am-table-hover table-main">
+              <thead>
+              <tr>
+                <th>科目</th>
+                <th>教师</th>
+                <th>剩余课时</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for i in selects %}
+              <tr>
+                <td><a href="/edit-course/{{ i.course.id }}">{{ i.course.name }}</a></td>
+                <td><a href="/edit-teacher/{{ i.teacher.id }}/">{{ i.teacher.name }}</a></td>
+                <td>
+                  <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/sub-time/{{ student.id }}/{{ i.course.id }}/">-</a>
+                  {{ i.time }}
+                  <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/add-time/{{ student.id }}/{{ i.course.id }}/">+</a>
+                </td>
+                <td>
+                  <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                      <a class="am-btn am-btn-default am-btn-xs am-text-danger" href="/delete-select/{{ student.id }}/{{ i.course.id }}/"><span class="am-icon-trash-o"></span>删除关系</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <hr />
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="am-modal am-modal-no-btn" tabindex="-1" id="new-course">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd">添加 科目
+        <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+      </div>
+      <div class="am-modal-bd">
+        <form method="post" class="am-form">
+          {% csrf_token %}
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">科目名称</span>
+            <select class="am-form-field" name="course-id" id="course-id">
+              {% for i in courses %}
+              <option value="{{ i.id }}">{{ i.id }} - {{ i.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">老师</span>
+            <select class="am-form-field" name="course-teacher" id="course-teacher">
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">课时</span>
+            <input type="number" class="am-form-field" name="course-time" placeholder="course-time">
+          </div>
+          <br/>
+          <br/>
+          <div class="am-cf am-u-xs-12">
+            <input type="submit" name="" value="创 建" class="am-btn am-btn-primary am-btn-sm am-fl am-u-xs-12">
+          </div>
+          <br/>
+          <br/>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+$(document).ready(function() {
+
+  value = $("#course-id").val()
+  $.ajax({
+    type: 'GET',
+    url: '/course-teacher/' + value + '/',
+    dataType: 'json',
+    success: function(res) {
+      for(var i in res) {
+        var teacher = res[i]
+        $('#course-teacher').append('<option value="'+teacher.id+'">' + teacher.id + ' - '+ teacher.name + '</option>>')
+      }
+    }
+  })
+
+  $('#course-id').change(function() {
+    $('#course-teacher').empty()
+    value = $("#course-id").val()
+
+    $.ajax({
+      type: 'GET',
+      url: '/course-teacher/' + value + '/',
+      dataType: 'json',
+      success: function(res) {
+        for(var i in res) {
+          var teacher = res[i]
+          $('#course-teacher').append('<option value="'+teacher.id+'">' + teacher.id + ' - '+ teacher.name + '</option>>')
+        }
+      }
+    })
+
+  })
+})
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}学生上课信息{% endblock %}
+
+{% block cur %}学生上课信息 - {{ student.name }}{% endblock %}
+
+{% block content %}
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default" data-am-modal="{target: '#new-student', closeViaDimmer: 0, width: 800}"><span class="am-icon-plus"></span> 新增</button>
+              {% if post and error %}
+                <button type="button" class="am-btn am-btn-danger" disabled="disabled">{{ reason }}</button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <!--<div class="am-u-sm-12 am-u-md-6">-->
+          <!--<form method="get">-->
+            <!--<div class="am-input-group am-input-group-sm">-->
+              <!--<input type="text" class="am-form-field" name="search" value="{{ search }}">-->
+              <!--<span class="am-input-group-btn">-->
+                <!--<button class="am-btn am-btn-default" type="submit">搜索</button>-->
+              <!--</span>-->
+            <!--</div>-->
+          <!--</form>-->
+        <!--</div>-->
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+          <form class="am-form">
+            <table class="am-table am-table-striped am-table-hover table-main">
+              <thead>
+              <tr>
+                <th>日期</th>
+                <th>学习内容</th>
+                <th>评价</th>
+                {% if user.is_admin %}
+                <th>操作</th>
+                {% endif %}
+              </tr>
+              </thead>
+              <tbody>
+              {% for i in records %}
+              <tr>
+                <td><small>{{ i.date }}</small></td>
+                <td><small>{{ i.get_school_display }}{{ i.get_grade_display }}<br/>{{ i.get_course_display }}{{ i.get_book_display }}{{ i.get_unit_display }}<br/>{{ i.note }}</small></td>
+                <td><small>{{ i.get_study_display }}<br/>{{ i.get_knowledge_display }}<br/>{{ i.get_practice_display }}<br/>{{ i.get_sdudy_note_display }}</small></td>
+                {% if user.is_admin %}
+                <td>
+                  <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                      <a class="am-btn am-btn-default am-btn-xs am-text-secondary" href="/edit-class/{{ i.id }}/"><span class="am-icon-pencil-square-o"></span>编辑</a><br/>
+                      <a class="am-btn am-btn-default am-btn-xs am-text-danger" href="/delete-class/{{ i.id }}/"><span class="am-icon-trash-o"></span>删除</a>
+                    </div>
+                  </div>
+                </td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            <hr />
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="am-modal am-modal-no-btn" tabindex="-1" id="new-student">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd">添加 上课 信息
+        <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+      </div>
+      <div class="am-modal-bd">
+        <form method="post" class="am-form">
+          {% csrf_token %}
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">日期</span>
+            <input type="date" class="am-form-field" name="date" data-am-datepicker readonly required/>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">学校</span>
+            <select class="am-form-field" name="school">
+            {% for i in school_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">年级</span>
+            <select class="am-form-field" name="grade">
+            {% for i in grade_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">课程</span>
+            <select class="am-form-field" name="course">
+            {% for i in course_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">书</span>
+            <select class="am-form-field" name="book">
+            {% for i in book_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">单元</span>
+            <select class="am-form-field" name="unit">
+            {% for i in unit_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">备注</span>
+            <input type="text" maxlength="16" class="am-form-field" name="note" placeholder="note">
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">学习情况</span>
+            <select class="am-form-field" name="study">
+            {% for i in study_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">知识接受情况</span>
+            <select class="am-form-field" name="knowledge">
+            {% for i in knowledge_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">练习反馈</span>
+            <select class="am-form-field" name="practice">
+            {% for i in practice_choices %}
+              <option value="{{ i.0 }}">{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">备注</span>
+            <input type="text" maxlength="16" class="am-form-field" name="study_note" placeholder="study_note">
+          </div>
+          <br/>
+          <br/>
+          <div class="am-cf am-u-xs-12">
+            <input type="submit" name="" value="创 建" class="am-btn am-btn-primary am-btn-sm am-fl am-u-xs-12">
+          </div>
+          <br/>
+          <br/>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- content end -->
+
+{% endblock %}

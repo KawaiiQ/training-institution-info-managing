@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}教师 - {{ teacher.name }}{% endblock %}
+
+{% block cur %}编辑教师 - {{ teacher.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ teacher.id }} - {{ teacher.name }}</h1>
+{% if post and error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-danger" disabled="disabled">{{ reason }}</button>
+{% endif %}
+{% if post and not error %}
+<button class="am-btn am-btn-default am-btn-md am-btn-success" disabled="disabled">操作成功</button>
+{% endif %}
+<hr>
+<form method="post" class="am-form">
+  {% csrf_token %}
+  <label for="name">姓名:</label>
+  <input type="text" name="name" id="name" value="{{ teacher.name }}">
+  <br>
+    <label for="phone">电话:</label>
+    <input type="text" name="phone" id="phone" value="{{ teacher.phone }}">
+  <br>
+    <label for="time">课时:</label>
+    <input type="number" name="time" id="time" value="{{ teacher.time }}">
+  <br>
+  <br />
+  <div class="am-cf">
+    <input type="submit" name="" value="提 交" class="am-btn am-btn-primary am-btn-sm am-fl">
+  </div>
+</form>
+{% endblock %}

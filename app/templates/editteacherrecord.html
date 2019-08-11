@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}编辑教师上课信息{% endblock %}
+
+{% block cur %}编辑教师上课信息{% endblock %}
+
+{% block content %}
+      <a href="/teacher-record/{{ teacher.id }}/">返回教师上课记录列表</a>
+      <div class="am-modal-hd">
+        编辑 上课 信息
+      </div>
+      <div class="am-modal-bd">
+        <form method="post" class="am-form">
+          {% csrf_token %}
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">日期</span>
+            <input type="date" class="am-form-field" value="{{ record.date.isoformat }}" name="date" data-am-datepicker readonly required/>
+          </div>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">学校</span>
+            <select class="am-form-field" name="school">
+            {% for i in school_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.school %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">年级</span>
+            <select class="am-form-field" name="grade">
+            {% for i in grade_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.grade %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">课程</span>
+            <select class="am-form-field" name="course">
+            {% for i in course_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.course %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">书</span>
+            <select class="am-form-field" name="book">
+            {% for i in book_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.book %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">单元</span>
+            <select class="am-form-field" name="unit">
+            {% for i in unit_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.unit %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">备注</span>
+            <input type="text" maxlength="16" class="am-form-field" name="note" placeholder="note" value="{{ record.note }}">
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">学习情况</span>
+            <select class="am-form-field" name="study">
+            {% for i in study_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.study %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">知识接受情况</span>
+            <select class="am-form-field" name="knowledge">
+            {% for i in knowledge_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.knowledge %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">练习反馈</span>
+            <select class="am-form-field" name="practice">
+            {% for i in practice_choices %}
+              <option value="{{ i.0 }}" {% if i.0 == record.practice %}selected="selected"{% endif %}>{{ i.1 }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <br/>
+          <br/>
+          <div class="am-input-group am-u-xs-12">
+            <span class="am-input-group-label">备注</span>
+            <input type="text" maxlength="16" class="am-form-field" name="study_note" placeholder="study_note" value="{{ record.study_note }}">
+          </div>
+          <br/>
+          <br/>
+          <div class="am-cf am-u-xs-12">
+            <input type="submit" name="" value="保 存" class="am-btn am-btn-primary am-btn-sm am-fl am-u-xs-12">
+          </div>
+          <br/>
+          <br/>
+        </form>
+      </div>
+
+{% endblock %}
